@@ -20,7 +20,7 @@ SOURCE = (
 
 def method_body(name: str) -> str:
     source = SOURCE.read_text(encoding="utf-8")
-    match = re.search(r"\\bdefault\\s+\\S+\\s+" + re.escape(name) + r"\\s*\\(", source)
+    match = re.search(r"\bdefault\s+\S+\s+" + re.escape(name) + r"\s*\(", source)
     if match is None:
         raise AssertionError(f"Missing Forge method {name}")
     opening = source.find("{", match.end())
