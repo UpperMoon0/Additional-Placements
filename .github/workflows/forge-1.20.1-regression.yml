@@ -27,12 +27,15 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - name: Install Gradle 8.12.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.12.1'
       - name: Run delegation regression checks
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
       - name: Build Forge production jar
         run: |
-          chmod +x ./gradlew
-          ./gradlew :forge:build --no-daemon --max-workers=2 --console=plain
+          gradle :forge:build --no-daemon --max-workers=2 --console=plain
       - name: Upload Forge jar for isolated validation
         if: success()
         uses: actions/upload-artifact@v4
