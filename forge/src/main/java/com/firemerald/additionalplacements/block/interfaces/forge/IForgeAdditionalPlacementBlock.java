@@ -55,7 +55,8 @@ public interface IForgeAdditionalPlacementBlock<T extends Block> extends IPlacem
     @Override
     default boolean makesOpenTrapdoorAboveClimbable(BlockState state, LevelReader level, BlockPos pos, BlockState trapdoorState) {
         BlockState modelState = getModelState(state);
-        return state.getBlock().makesOpenTrapdoorAboveClimbable(modelState, level, pos, trapdoorState);
+        // Delegate on the parent block, not this wrapper: the parent state lacks our extra properties.
+        return modelState.getBlock().makesOpenTrapdoorAboveClimbable(modelState, level, pos, trapdoorState);
     }
 
     @Override
@@ -217,13 +218,13 @@ public interface IForgeAdditionalPlacementBlock<T extends Block> extends IPlacem
     @Override
     default boolean isSlimeBlock(BlockState state) {
         BlockState modelState = getModelState(state);
-        return modelState.getBlock().isSlimeBlock(state);
+        return modelState.getBlock().isSlimeBlock(modelState);
     }
 
     @Override
     default boolean isStickyBlock(BlockState state) {
         BlockState modelState = getModelState(state);
-        return modelState.getBlock().isStickyBlock(state);
+        return modelState.getBlock().isStickyBlock(modelState);
     }
 
     @Override
@@ -341,6 +342,6 @@ public interface IForgeAdditionalPlacementBlock<T extends Block> extends IPlacem
     @Nullable
     default PushReaction getPistonPushReaction(BlockState state) {
         BlockState modelState = getModelState(state);
-        return modelState.getBlock().getPistonPushReaction(state);
+        return modelState.getBlock().getPistonPushReaction(modelState);
     }
 }
