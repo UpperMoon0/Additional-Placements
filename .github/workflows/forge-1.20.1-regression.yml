@@ -40,7 +40,10 @@ jobs:
         run: |
           mkdir -p forge/run/gametest
           printf 'eula=true\n' > forge/run/gametest/eula.txt
-          gradle :forge:runGameTestServer --no-daemon --max-workers=2 --console=plain
+          set -o pipefail
+          gradle :forge:runGameTestServer --no-daemon --max-workers=2 --console=plain | tee forge-gametest.log
+          grep -F "Running test batch 'additionalplacements.regression:" forge-gametest.log
+          grep -Eq 'All [1-9][0-9]* required tests passed' forge-gametest.log
       - name: Verify and stage remapped production JAR
         run: python3 tests/verify_forge_jar.py --stage
       - name: Upload Forge jar for isolated validation
