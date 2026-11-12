@@ -117,3 +117,8 @@ runs/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+
+# Central Jenkins local acceptance and verified release staging
+/dist/
+/ci-evidence/
+/ci-production/
