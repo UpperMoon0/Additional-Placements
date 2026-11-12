@@ -3,7 +3,6 @@
 import argparse
 import hashlib
 from pathlib import Path
-import re
 import shutil
 import sys
 from zipfile import BadZipFile, ZipFile
@@ -20,10 +19,14 @@ REQUIRED = {
 }
 
 def verify(stage=False):
-    match = re.search(r"(?m)^mod_version=([^\\r\\n]+)$", VERSIONS.read_text(encoding="utf-8"))
-    if not match:
+    version = next(
+        (line.partition("=")[2].strip()
+         for line in VERSIONS.read_text(encoding="utf-8").splitlines()
+         if line.startswith("mod_version=")),
+        None,
+    )
+    if not version:
         raise ValueError("Missing mod_version in gradle.properties")
-    version = match.group(1).strip()
     jar = JAR_DIR / f"additionalplacements-forge-{version}.jar"
     if not jar.is_file():
         raise FileNotFoundError(f"Production remapJar missing: {jar}")
