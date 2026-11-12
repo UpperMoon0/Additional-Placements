@@ -21,6 +21,7 @@ loom {
 
     runs {
         gameTestServer {
+            forgeTemplate("gameTestServer")
             environment("gameTestServer")
             runDir "run/gametest"
             property "forge.enabledGameTestNamespaces", "additionalplacements"
