@@ -36,10 +36,18 @@ jobs:
       - name: Build Forge production jar
         run: |
           gradle :forge:build --no-daemon --max-workers=2 --console=plain
+      - name: Execute Forge dedicated-server regression GameTests
+        run: |
+          mkdir -p forge/run
+          printf 'eula=true\n' > forge/run/eula.txt
+          gradle :forge:runGameTestServer --no-daemon --max-workers=2 --console=plain
+      - name: Verify and stage remapped production JAR
+        run: python3 tests/verify_forge_jar.py --stage
       - name: Upload Forge jar for isolated validation
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: additional-placements-forge-1.20.1
-          path: forge/build/libs/*.jar
+          path: dist/additionalplacements-forge-3.0.1.2.jar
+          if-no-files-found: error
           retention-days: 7
