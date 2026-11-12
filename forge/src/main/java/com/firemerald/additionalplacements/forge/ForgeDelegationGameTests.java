@@ -6,6 +6,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TrapDoorBlock;
@@ -29,6 +31,15 @@ public final class ForgeDelegationGameTests {
         BlockPos worldPos = helper.absolutePos(local);
         BlockState trapdoor = Blocks.OAK_TRAPDOOR.defaultBlockState()
                 .setValue(TrapDoorBlock.OPEN, true);
+        BlockPos trapdoorLocal = local.below();
+        helper.setBlock(trapdoorLocal, trapdoor);
+        LivingEntity simulatedMob = EntityType.CHICKEN.create(helper.getLevel());
+        if (simulatedMob == null) {
+            helper.fail("Cannot create test mob for trapdoor ladder path");
+            return;
+        }
+        simulatedMob.moveTo(worldPos.getX() + 0.5, worldPos.getY() - 0.5,
+                worldPos.getZ() + 0.5);
         int checked = 0;
 
         for (Block block : BuiltInRegistries.BLOCK) {
@@ -52,6 +63,9 @@ public final class ForgeDelegationGameTests {
                 helper.fail("Trapdoor climbability mismatch for " + block);
                 return;
             }
+            // Mirror FowlPlay's entry path through the open trapdoor hook.
+            trapdoor.getBlock().isLadder(trapdoor, helper.getLevel(),
+                    helper.absolutePos(trapdoorLocal), simulatedMob);
             checked++;
         }
 
