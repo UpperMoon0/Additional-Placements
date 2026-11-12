@@ -35,11 +35,29 @@ the original broken build fails the same scenario, preserving the reproduction
 world/config. **Do not substitute a structural check for this compatibility
 pass**. Do not use any production world, player data or live server ports.
 
-GitHub Actions jobs that fail before the checkout step and report an empty
-`steps` list cannot establish anything about Java/Gradle. Check GitHub
-Actions billing/usage limits, hosted runner entitlement and repository
-Actions policy in GitHub settings. Only a successfully executed exact-HEAD
-run, or independently recorded equivalent isolated acceptance, counts.
+The fork migrates CI to the reviewed `UpperMoon0/NsTut-CICD` Jenkins
+library. The central pipeline tests both Fabric and Forge, runs this Forge
+GameTest in an isolated workspace, verifies both remapped production JARs,
+and archives exact-commit hashes and test evidence. The source Jenkinsfile
+contains only the shared-library call. The fork's **reviewed default branch**
+`1.20.1` is the only admitted Jenkins source; PR heads are not implicitly
+allowed on private CI workers. Do not confuse unit tests with live Jenkins
+acceptance or deploy an untested PR artifact.
+
+For local/isolated acceptance, the complete pinned-tool sequence is:
+
+```sh
+python3 tools/jenkins_additional_placements.py verify
+python3 tools/jenkins_additional_placements.py fabric
+python3 tools/jenkins_additional_placements.py forge
+python3 tools/jenkins_additional_placements.py forge-gametest
+python3 tools/jenkins_additional_placements.py package
+```
+
+The runner requires Java 21 and installs only checksum-verified Gradle 8.14.
+A nonzero Forge GameTest count, both production mod identities, and matching
+source SHA are mandatory; the FowlPlay-specific compatibility check below
+remains an additional manual release gate.
 
 ## Verified isolated result (2026-11-12 UTC)
 
@@ -64,8 +82,8 @@ The test covers the same open-trapdoor hook using a vanilla mob; **FowlPlay
 itself was not installed**. The isolated FowlPlay-specific test remains a
 separate pre-deployment compatibility check.
 
-GitHub Actions is still unable to execute at this commit: its check-run
-annotation reports `The job was not started because your account is locked
-due to a billing issue.` Until GitHub account billing is restored, GitHub
-Actions cannot supply an exact-HEAD green status. Do not interpret this as a
-build or GameTest failure, and do not publish or deploy on this evidence alone.
+The historical GitHub Actions job was blocked at startup by account billing,
+not by a Java or Forge failure. It is removed from this migration branch;
+Jenkins must separately produce a successful exact-commit build and verified
+artifact record before publication. No default-branch Jenkins run is claimed
+for the still-unmerged PR.
