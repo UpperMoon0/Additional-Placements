@@ -137,6 +137,15 @@ def verify_jar(path, metadata, version):
             doc = json.loads(jar.read(metadata))
             if doc.get("id") != "additionalplacements" or doc.get("version") != version:
                 raise RuntimeError("Incorrect Fabric mod identity/version")
+            required = {
+                "com/firemerald/additionalplacements/common/fabric/FabricModEvents.class",
+                "com/firemerald/additionalplacements/client/fabric/FabricModEvents.class",
+                "com/firemerald/additionalplacements/generation/APGenerationTypes.class",
+                "additionalplacements.accesswidener",
+                "mixins.additionalplacements.json",
+            }
+            if not required.issubset(jar.namelist()):
+                raise RuntimeError("Fabric production JAR lacks entrypoints or runtime resources")
         else:
             text = jar.read(metadata).decode("utf-8")
             if 'modId = "additionalplacements"' not in text or f'version = "{version}"' not in text:
