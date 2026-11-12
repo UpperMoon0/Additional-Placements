@@ -13,3 +13,7 @@ Features:
  - vertical stairs actually connnect to other stairs (and vice-versa)
  - supports most modded blocks
  - simple datagen helpers to generate blockstates, block models, and item models for modded blocks, in case extra compatibility is needed  
+
+## Maintained fork CI
+
+The UpperMoon0 fork uses the [central NsTut-CICD Jenkins pipeline](https://github.com/UpperMoon0/NsTut-CICD) for **both Fabric and Forge 1.20.1** builds, Forge dedicated-server regression tests, and SHA-256 verified production artifacts. The source `Jenkinsfile` is only a delegate. Its reviewed `1.20.1` default branch is the only accepted private CI source; third-party pull-request heads are never executed on private runners. The original maintainer's CurseForge/Modrinth pages linked above are not automated deployment destinations for this fork. See [Forge acceptance requirements](tests/README-forge-acceptance.md).
