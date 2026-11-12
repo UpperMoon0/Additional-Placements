@@ -12,8 +12,8 @@ Run using a **disposable workspace and world**, never the live TFG world:
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 # Java 21 is used to run Loom/Gradle, targeting bytecode 17.
 gradle :forge:build --no-daemon --max-workers=2 --console=plain
-mkdir -p forge/run
-printf 'eula=true\\n' > forge/run/eula.txt
+mkdir -p forge/run/gametest
+printf 'eula=true\\n' > forge/run/gametest/eula.txt
 gradle :forge:runGameTestServer --no-daemon --max-workers=2 --console=plain
 python3 tests/verify_forge_jar.py --stage
 ```
