@@ -33,6 +33,14 @@ class AdditionalPlacementsCIContract(unittest.TestCase):
                 bundle.writestr("fabric.mod.json", json.dumps({
                     "id": "additionalplacements" if valid else "wrongmod", "version": "3.0.1.2"
                 }))
+                for member in (
+                    "com/firemerald/additionalplacements/common/fabric/FabricModEvents.class",
+                    "com/firemerald/additionalplacements/client/fabric/FabricModEvents.class",
+                    "com/firemerald/additionalplacements/generation/APGenerationTypes.class",
+                    "additionalplacements.accesswidener",
+                    "mixins.additionalplacements.json",
+                ):
+                    bundle.writestr(member, b"fixture")
             else:
                 bundle.writestr("META-INF/mods.toml",
                                 'modId = "additionalplacements"\nversion = "' +
@@ -107,6 +115,9 @@ class AdditionalPlacementsCIContract(unittest.TestCase):
             ci.forge_gametest()
         self.assertEqual(json.loads((self.root / "ci-evidence/gametest.json").read_text())["source_sha"], sha)
         self.assertEqual((self.root / "forge/run/gametest/eula.txt").read_text(), "eula=true\n")
+        settings = (self.root / "forge/run/gametest/server.properties").read_text()
+        self.assertIn("server-ip=127.0.0.1", settings)
+        self.assertIn("server-port=0", settings)
 
 
 if __name__ == "__main__":
