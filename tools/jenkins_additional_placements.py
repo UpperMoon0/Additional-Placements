@@ -147,6 +147,9 @@ def forge_gametest():
     root = ROOT / "forge" / "run" / "gametest"
     root.mkdir(parents=True, exist_ok=True)
     (root / "eula.txt").write_text("eula=true\n")
+    (root / "server.properties").write_text(
+        "server-ip=127.0.0.1\nserver-port=0\nlevel-name=ci-gametest\nonline-mode=false\n"
+    )
     log = ROOT / "ci-evidence" / "forge-gametest.log"
     gradle(":forge:runGameTestServer", log=log)
     data = log.read_text(encoding="utf-8")
