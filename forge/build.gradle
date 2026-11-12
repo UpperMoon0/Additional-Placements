@@ -20,6 +20,11 @@ loom {
     }
 
     runs {
+        gameTestServer {
+            environment("gameTestServer")
+            runDir "run/gametest"
+            property "forge.enabledGameTestNamespaces", "additionalplacements"
+        }
         data {
             data()
             programArgs "--all", "--mod", "additionalplacements"
