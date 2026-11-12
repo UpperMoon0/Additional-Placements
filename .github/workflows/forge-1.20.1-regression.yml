@@ -38,8 +38,8 @@ jobs:
           gradle :forge:build --no-daemon --max-workers=2 --console=plain
       - name: Execute Forge dedicated-server regression GameTests
         run: |
-          mkdir -p forge/run
-          printf 'eula=true\n' > forge/run/eula.txt
+          mkdir -p forge/run/gametest
+          printf 'eula=true\n' > forge/run/gametest/eula.txt
           gradle :forge:runGameTestServer --no-daemon --max-workers=2 --console=plain
       - name: Verify and stage remapped production JAR
         run: python3 tests/verify_forge_jar.py --stage
